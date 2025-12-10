@@ -1,0 +1,22 @@
+import cv2
+import requests
+
+BACKEND_URL = "https://YOUR-RENDER-URL.onrender.com/push-frame"
+
+cap = cv2.VideoCapture(0)  # or your HikVision/RTSP stream converted to frames
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        continue
+    
+    _, jpeg = cv2.imencode('.jpg', frame)
+
+    try:
+        requests.post(
+            BACKEND_URL,
+            data=jpeg.tobytes(),
+            headers={"Content-Type": "image/jpeg"}
+        )
+    except:
+        pass
